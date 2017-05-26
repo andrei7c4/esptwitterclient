@@ -61,7 +61,7 @@ The device should now be able to login to Twitter with the user's account and di
  - [language](https://dev.twitter.com/streaming/overview/request-parameters#language)
  - [filter](https://dev.twitter.com/streaming/overview/request-parameters#filter_level)
 
-Please see the [config.c](app/src/config.c) file for additional supported parameters.
+Please see the [config.c](src/config.c) file for additional supported parameters.
 
 There are two menus which can be accessed by pressing the device buttons. From the first menu user can share, retweet and like currently shown tweet. From the second menu user can mute the device for a certain period of time or completely turn it off. When the device is muted or turned off, it will not receive any tweets.
 
