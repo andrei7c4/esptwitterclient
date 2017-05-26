@@ -13,6 +13,7 @@ Unicode is supported. Glyphs for all characters found in Arial Unicode MS font a
 Any ESP8266 based module with at least 4 MB flash and SPI pins, such as ESP-12E, can be used. [NodeMCU-DEVKIT](https://github.com/nodemcu/nodemcu-devkit-v1.0) is a good choice since it already contains 3.3 V regulator suitable for powering OLED display.
 
 In addition to the display, there's a MPU6500 accelerometer connected on the SPI bus. Accelerometer is used for an automatic screen rotation. Devices on the SPI bus are connected in the following way:
+
 | ESP8266        | SSD1322        | MPU6500        |
 | -------------- | -------------- | -------------- |
 | GPIO5          | RESET          |                |
