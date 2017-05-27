@@ -25,7 +25,7 @@ In addition to the display, there's a MPU6500 accelerometer connected on the SPI
 
 The SSD1322 based displays are quite common. One can be purchased e.g. from [buydisplay.com](http://www.buydisplay.com/default/oled-3-2-inch-displays-module-companies-with-driver-circuit-blue-on-black) or from AliExpress or eBay. The display's communication mode must be changed to 3-wire SPI in case it is not the default. Refer to the display documentation for the instructions how to change the mode. Usually some R0 resistors must be re-soldered.
 
-There are two push buttons used for accessing the device menus. Both buttons are connected to the analog input pin of the ESP8266. Full schematics coming soon.
+There are two push buttons used for accessing the device menus. Both buttons are connected to the analog input pin of the ESP8266. Please see [the schematics here](schematics.pdf).
 
 ## Building the software
 [esp-open-sdk](https://github.com/pfalcon/esp-open-sdk) is a preferred toolchain for this project. Other toolchains may work too, but are not tested.
