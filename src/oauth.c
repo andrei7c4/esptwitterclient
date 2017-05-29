@@ -95,40 +95,6 @@ int ICACHE_FLASH_ATTR percentEncode(const char *src, int srcLen, char *dst, int 
 	return len;
 }
 
-//int ICACHE_FLASH_ATTR percentEncodeInplace(char *str, int strLen, int strSize)
-//{
-//	int i;
-//	int bufSize = 0;
-//	char *pStr = str;
-//	for (i = 0; i < strLen; i++)
-//	{
-//		bufSize += charNeedEscape(*pStr++) ? 3 : 1;
-//	}
-//	if (bufSize == strLen)
-//	{
-//		return strLen;
-//	}
-//	bufSize++;
-//	if (bufSize > strSize)
-//	{
-//		return 0;	// encoded string will not fit in str
-//	}
-//
-//	char *buf = (char*)os_malloc(bufSize);
-//	if (!buf)
-//	{
-//		return 0;
-//	}
-//
-//	int resultLen = percentEncode(str, strLen, buf, bufSize);
-//	if (resultLen > 0)
-//	{
-//		os_memcpy(str, buf, resultLen+1);
-//	}
-//	os_free(buf);
-//	return resultLen;
-//}
-
 int ICACHE_FLASH_ATTR percentEncodedStrLen(const char *str, int strLen)
 {
 	int length = 0;
@@ -160,14 +126,19 @@ LOCAL char ICACHE_FLASH_ATTR randomAlphanumeric(void)
 
 void ICACHE_FLASH_ATTR randomAlphanumericString(char *str, int len)
 {
+	static int randInit = FALSE;
+	if (!randInit)
+	{
+		srand(sntp_get_current_timestamp());
+		randInit = TRUE;
+	}
+
 	while (len--)
 	{
 		*str = randomAlphanumeric();
 		str++;
 	}
 	*str = '\0';
-
-	//os_strcpy(str, "kYjzVBB8Y0ZFabxSWbWovY3uYSQ2pTgmZeNu2VS4cg");
 }
 
 LOCAL int ICACHE_FLASH_ATTR appendParamPercentEncode(char *dst, int dstSize, const char *param, const char *value, int valueLen)

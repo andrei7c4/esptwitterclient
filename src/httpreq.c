@@ -158,18 +158,11 @@ LOCAL int ICACHE_FLASH_ATTR formHttpRequest(char *dst, int dstSize,
 		goto out;
 	}
 
-	uint ts = sntp_get_current_timestamp();
-	char timestamp[11];
-	ets_snprintf(timestamp, sizeof(timestamp), "%d", ts);
-
-	static int randInit = FALSE;
-	if (!randInit)
-	{
-		srand(ts);
-		randInit = TRUE;
-	}
 	char nonce[43];
 	randomAlphanumericString(nonce, 42);
+
+	char timestamp[11];
+	ets_snprintf(timestamp, sizeof(timestamp), "%u", sntp_get_current_timestamp());
 
 
 	char *pDst = dst;
@@ -339,7 +332,7 @@ int ICACHE_FLASH_ATTR twitterRetweetTweet(const char *host, const char *tweetId)
     int rv = ERROR;
 	char url[80];
 	int len = ets_snprintf(url, sizeof(url), twitterRetweeetUrl, tweetId);
-	if (len < 0 || len >= sizeof(url)) return;
+	if (len < 0 || len >= sizeof(url)) return ERROR;
 
 	ParamList params;
 	os_memset(&params, 0, sizeof(ParamList));

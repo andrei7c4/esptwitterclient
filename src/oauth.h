@@ -7,7 +7,6 @@
 int base64encode(const char *src, int srcLen, char *dst, int dstSize);
 
 int percentEncode(const char *src, int srcLen, char *dst, int dstSize);
-//int percentEncodeInplace(char *str, int strLen, int strSize);
 int percentEncodedStrLen(const char *str, int strLen);
 
 void randomAlphanumericString(char *str, int len);

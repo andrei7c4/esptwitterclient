@@ -25,8 +25,6 @@ void dispCopySecMemBufToMain(void);
 int dispTitleScrollStep(int reset);
 void dispFillMem(uchar data, int lines);
 
-void printScreen(void);
-
 void drawImage(int x, int y, const uint *image);
 void drawBitmapPixelByPixel(int x, int y, int bmWidth, int bmHeight, const uint *bitmap, int bitmapSize);
 

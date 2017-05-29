@@ -192,17 +192,8 @@ void user_init(void)
 	SSD1322_init();
 
 	drawTwitterLogo();
-	//dispFillMem(0xff, DISP_HEIGHT);
 	dispUpdate(Page0);
 	wakeupDisplay();
-
-		//wifi_set_opmode(NULL_MODE);
-		//os_timer_setfn(&gpTmr, (os_timer_func_t *)testDisp, NULL);
-		//os_timer_arm(&gpTmr, 2000, 0);
-//		const char *name = "User Name";
-//		curTweet.user.nameLen = strToWstr(name, os_strlen(name), &curTweet.user.name);
-//		os_strcpy(curTweet.user.screenName, "screen_name");
-//		curTweet.user.screenNameLen = os_strlen(curTweet.user.screenName);
 	
 	setAppState(stateConnectToAp);
 	wifi_set_opmode(STATION_MODE);
@@ -235,9 +226,8 @@ LOCAL void ICACHE_FLASH_ATTR checkWiFiConnStatus(void)
 	{
 		// connection with AP established -> sync time
         // TODO: make addresses configurable
-		sntp_setservername(0, "fi.pool.ntp.org");
-		sntp_setservername(1, "europe.pool.ntp.org");
-		sntp_setservername(2, "us.pool.ntp.org");
+		sntp_setservername(0, "europe.pool.ntp.org");
+		sntp_setservername(1, "us.pool.ntp.org");
 		sntp_set_timezone(0);
 		sntp_init();
 		checkSntpSync();
@@ -755,7 +745,6 @@ LOCAL void ICACHE_FLASH_ATTR showTweet(const TweetInfo *tweet, const ushort *tex
 	}
 	lastTweetRecvTs = ts;
 
-	//printScreen();
 	wakeupDisplay();
 	titleState = titleStateNewTweet;
 }
@@ -944,7 +933,6 @@ LOCAL void ICACHE_FLASH_ATTR titleTmrCb(void)
 	if (!config.titleScrollEn)
 	{
 		dispCopySecMemBufToMain();
-		//printScreen();
 		dispUpdateTitle();
 		os_timer_arm(&titleStateTmr, TITLE_STATE_INTERVAL, 0);
 	}

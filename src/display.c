@@ -197,7 +197,6 @@ LOCAL void ICACHE_FLASH_ATTR titleScrollTmrCb(void)
 		os_timer_disarm(&scrollTmr);
 		titleScrollDone();
 	}
-	//printScreen();
 	dispUpdateTitle();
 }
 

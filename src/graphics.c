@@ -74,63 +74,6 @@ int ICACHE_FLASH_ATTR dispTitleScrollStep(int reset)
 }
 
 
-
-// ------------------ TODO: remove ------------------
-LOCAL void ICACHE_FLASH_ATTR sendInt(int data)
-{
-	char *pData = (char*)&data;
-	uart_tx_one_char(*pData);
-	uart_tx_one_char(*(pData+1));
-	uart_tx_one_char(*(pData+2));
-	uart_tx_one_char(*(pData+3));
-}
-
-LOCAL void ICACHE_FLASH_ATTR sendPreamble(void)
-{
-	const unsigned char data[] = {
-			0x55, 0x55, 0x55, 0x55, 0x55,
-			0xAA, 0xAA, 0xAA, 0xAA, 0xAA,
-			0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
-			0x01, 0x23, 0x45, 0x67, 0x89};
-
-	uart_tx_one_char('\n');
-	int i;
-	for (i = 0; i < sizeof(data); i++)
-	{
-		uart_tx_one_char(data[i]);
-	}
-}
-
-void ICACHE_FLASH_ATTR printScreen(void)
-{
-	uint i, j;
-
-	sendPreamble();
-
-	// complite display size
-	sendInt(DISP_HEIGHT);
-	sendInt(DISP_MEMWIDTH);
-
-	// size of this part
-	sendInt(DISP_HEIGHT);
-	sendInt(DISP_MEMWIDTH);
-
-	// start coordinates of this part
-	sendInt(0);	// x
-	sendInt(0);	// y
-
-    for (i = 0; i < DISP_HEIGHT; i++)
-    {
-        for (j = 0; j < DISP_MEMWIDTH; j++)
-        {
-        	uart_tx_one_char(mem[i][j]);
-        }
-    }
-    uart_tx_one_char('\n');
-}
-// ------------------ TODO: remove ------------------
-
-
 void ICACHE_FLASH_ATTR dispFillMem(uchar data, int lines)
 {
 	uint i;

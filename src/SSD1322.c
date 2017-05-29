@@ -47,23 +47,37 @@ typedef enum{
 #define REG_CMD_LOCK                0xFD
 
 
+// Adopted from Espressif example:
+// http://bbs.espressif.com/viewtopic.php?f=31&t=1346
 void SSD1322_write(uint8 low_8bit, uint8 high_bit)
 {
 	uint32 regvalue;
 	uint8 bytetemp;
 
-	if(high_bit)		bytetemp=(low_8bit>>1)|0x80;
-	else				bytetemp=(low_8bit>>1)&0x7f;
-	
-    //configure transmission variable,9bit transmission length and first 8 command bit
-	regvalue= ((8&SPI_USR_COMMAND_BITLEN)<<SPI_USR_COMMAND_BITLEN_S)|((uint32)bytetemp);		 
-	if(low_8bit&0x01) 	regvalue|=BIT15;        //write the 9th bit
-	while(READ_PERI_REG(SPI_CMD(HSPI))&SPI_USR);		//waiting for spi module available
-	WRITE_PERI_REG(SPI_USER2(HSPI), regvalue);				//write  command and command length into spi reg
-	SET_PERI_REG_MASK(SPI_CMD(HSPI), SPI_USR);		//transmission start
-//	while(READ_PERI_REG(SPI_CMD(spi_no))&SPI_USR);	
-}
+	if (high_bit)
+	{
+		bytetemp = (low_8bit>>1) | 0x80;
+	}
+	else
+	{
+		bytetemp = (low_8bit>>1) & 0x7f;
+	}
 
+    // configure transmission variable, 9bit transmission length and first 8 command bit
+	regvalue = ((8&SPI_USR_COMMAND_BITLEN)<<SPI_USR_COMMAND_BITLEN_S)|((uint32)bytetemp);
+
+	if(low_8bit&0x01)
+	{
+		regvalue |= BIT15;        //write the 9th bit
+	}
+	
+	while (READ_PERI_REG(SPI_CMD(HSPI)) & SPI_USR)
+	{
+		// waiting for spi module available
+	}
+	WRITE_PERI_REG(SPI_USER2(HSPI), regvalue);	// write command and command length into spi reg
+	SET_PERI_REG_MASK(SPI_CMD(HSPI), SPI_USR);	// transmission start
+}
 
 
 LOCAL void ICACHE_FLASH_ATTR SSD1322_setRowAddr(uchar addr)
@@ -76,7 +90,7 @@ LOCAL void ICACHE_FLASH_ATTR SSD1322_setRowAddr(uchar addr)
 LOCAL void ICACHE_FLASH_ATTR SSD1322_setColumnAddr(uchar addr)
 {
     SSD1322_write(REG_COLUMN_ADDR, eCmd);
-	SSD1322_write(0x1c|addr, eData);    // TODO: test with other values
+	SSD1322_write(0x1c|addr, eData);
 	SSD1322_write(0x5b, eData);
 }
 
