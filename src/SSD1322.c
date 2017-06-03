@@ -47,12 +47,12 @@ typedef enum{
 #define REG_CMD_LOCK                0xFD
 
 
-// Adopted from Espressif example:
+// Adapted from Espressif example:
 // http://bbs.espressif.com/viewtopic.php?f=31&t=1346
-void SSD1322_write(uint8 low_8bit, uint8 high_bit)
+void SSD1322_write(uchar low_8bit, uchar high_bit)
 {
-	uint32 regvalue;
-	uint8 bytetemp;
+	uint regvalue;
+	uchar bytetemp;
 
 	if (high_bit)
 	{
@@ -64,7 +64,7 @@ void SSD1322_write(uint8 low_8bit, uint8 high_bit)
 	}
 
     // configure transmission variable, 9bit transmission length and first 8 command bit
-	regvalue = ((8&SPI_USR_COMMAND_BITLEN)<<SPI_USR_COMMAND_BITLEN_S)|((uint32)bytetemp);
+	regvalue = ((8&SPI_USR_COMMAND_BITLEN)<<SPI_USR_COMMAND_BITLEN_S)|((uint)bytetemp);
 
 	if(low_8bit&0x01)
 	{
@@ -94,7 +94,7 @@ LOCAL void ICACHE_FLASH_ATTR SSD1322_setColumnAddr(uchar addr)
 	SSD1322_write(0x5b, eData);
 }
 
-void ICACHE_FLASH_ATTR SSD1322_setStartLine(int line)
+void ICACHE_FLASH_ATTR SSD1322_setStartLine(uchar line)
 {
 	SSD1322_write(REG_START_LINE, eCmd);
 	SSD1322_write(line, eData);
@@ -106,13 +106,13 @@ void ICACHE_FLASH_ATTR SSD1322_setOnOff(DispState state)
 	displayState = state;
 }
 
-void ICACHE_FLASH_ATTR SSD1322_setContrast(int value)
+void ICACHE_FLASH_ATTR SSD1322_setContrast(uchar value)
 {
 	SSD1322_write(REG_CONTRAST_CURRENT, eCmd);
 	SSD1322_write(value, eData);
 }
 
-void ICACHE_FLASH_ATTR SSD1322_setGrayLevel(int level)
+LOCAL void ICACHE_FLASH_ATTR SSD1322_setGrayLevel(uchar level)
 {
 	SSD1322_write(REG_GRAYSCALE_TABLE, eCmd);
 	int i;
@@ -125,7 +125,7 @@ void ICACHE_FLASH_ATTR SSD1322_setGrayLevel(int level)
 	SSD1322_write(REG_GRAYSCALE_TAB_EN, eCmd);		// enable gray scale table
 }
 
-void ICACHE_FLASH_ATTR SSD1322_partialDispEn(int startRow, int endRow)
+void ICACHE_FLASH_ATTR SSD1322_partialDispEn(uchar startRow, uchar endRow)
 {
 	SSD1322_write(REG_PART_DISP_EN, eCmd);
 	SSD1322_write(startRow, eData);
@@ -144,7 +144,7 @@ void ICACHE_FLASH_ATTR SSD1322_setRemap(uchar paramA, uchar paramB)
 	SSD1322_write(paramB, eData);
 }
 
-void ICACHE_FLASH_ATTR SSD1322_cpyMemBuf(uchar mem[][DISP_MEMWIDTH], int memRow, int dispRow, int height)
+void ICACHE_FLASH_ATTR SSD1322_cpyMemBuf(uchar mem[][DISP_MEMWIDTH], int memRow, uchar dispRow, int height)
 {
     int x, y;
 	uchar temp,temp1,temp2,temp3,temp4,temp5,temp6,temp7,temp8;

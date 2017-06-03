@@ -7,7 +7,7 @@
 #define TITLE_SCROLL_INTERVAL		20
 
 
-extern void SSD1322_cpyMemBuf(uchar mem[][DISP_MEMWIDTH], int memRow, int dispRow, int height);
+extern void SSD1322_cpyMemBuf(uchar mem[][DISP_MEMWIDTH], int memRow, uchar dispRow, int height);
 void ICACHE_FLASH_ATTR dispUpdate(DispPage page)
 {
 	SSD1322_cpyMemBuf(mem, 0, page*DISP_HEIGHT, DISP_HEIGHT);

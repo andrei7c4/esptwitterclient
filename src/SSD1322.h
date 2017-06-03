@@ -11,9 +11,10 @@
 #define CONTRAST_LEVEL_INIT		0
 
 void SSD1322_init(void);
-void SSD1322_setStartLine(int line);
+void SSD1322_setStartLine(uchar line);
 void SSD1322_setOnOff(DispState state);
-void SSD1322_partialDispEn(int startRow, int endRow);
+void SSD1322_setContrast(uchar value);
+void SSD1322_partialDispEn(uchar startRow, uchar endRow);
 void SSD1322_partialDispDis(void);
 void SSD1322_setRemap(uchar paramA, uchar paramB);
 
