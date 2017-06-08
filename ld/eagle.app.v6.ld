@@ -6,7 +6,7 @@ MEMORY
   dram0_0_seg :                         org = 0x3FFE8000, len = 0x14000
   iram1_0_seg :                         org = 0x40100000, len = 0x8000
   irom0_0_seg :                         org = 0x40210000, len = 0x4B000
-  font0_0_seg :                         org = 0x4025B000, len = 0x3EB000
+  font0_0_seg :                         org = 0x4025B000, len = 0x3A5000
 }
 
 PHDRS
