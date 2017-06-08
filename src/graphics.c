@@ -183,11 +183,9 @@ void ICACHE_FLASH_ATTR drawBitmapPixelByPixel(int x, int y, int bmWidth, int bmH
     if (bmWidth <= 0)
         return;
 	
-	uchar *buf = (uchar*)os_malloc(bitmapSize*4);
-	uchar *pBitmap = buf;
-	if (!buf)
+	uchar *pBitmap = (uchar*)os_malloc(bitmapSize*4);
+	if (!pBitmap)
 		return;
-	//os_memcpy(pBitmap, bitmap, bitmapSize*4);
 	spiFlashRead(pBitmap, bitmap, bitmapSize*4);
 
 	int bmX, bmY, dispX, dispY;
@@ -199,7 +197,7 @@ void ICACHE_FLASH_ATTR drawBitmapPixelByPixel(int x, int y, int bmWidth, int bmH
         }
     }
 	
-	os_free(buf);
+	os_free(pBitmap);
 }
 
 

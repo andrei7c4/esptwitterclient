@@ -15,6 +15,11 @@ int ICACHE_FLASH_ATTR base64encode(const char *src, int srcLen, char *dst, int d
 	unsigned char *result;
 	int len;
 
+	if (!tempmem)
+	{
+		return 0;
+	}
+
 	// fake rom malloc init
 	mem_init(tempmem);
 	result = base64_encode(src, 20, &len);
