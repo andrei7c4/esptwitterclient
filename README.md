@@ -1,5 +1,5 @@
 # ESP8266 Twitter Client
-This is an ESP8266 based Twitter client built with 256x64 OLED (SSD1322 based) display. ESP8266 connects directly to Twitter, so no 3rd party proxy services are used.
+This is an ESP8266 based Twitter client built with 256x64 OLED (SSD1322 based) display. ESP8266 connects directly to Twitter, so no third-party proxy services are used.
 
 Application connects to [user stream](https://dev.twitter.com/streaming/userstreams) and displays all the incoming tweets for that user. This basically means the same tweets the user would see on her Twitter main page. Additionally, a [track](https://dev.twitter.com/streaming/overview/request-parameters#track) paramter can be set to include tweets containing specified keywords.
 
@@ -68,4 +68,4 @@ There are two menus which can be accessed by pressing the device buttons. From t
 The menus' logic is as following: When no menu is shown, pressing the button activates the corresponding menu. Pressing the same button again changes the selected action. Pressing another button executes the selected action. If no buttons are pressed for 10 seconds, menu will be hidden automatically.
 
 ***
-[![](http://img.youtube.com/vi/iQ0JZXOWUDg/sddefault.jpg)](http://www.youtube.com/watch?v=iQ0JZXOWUDg)
+[![](http://img.youtube.com/vi/5xc7ObxyhF4/sddefault.jpg)](https://youtu.be/5xc7ObxyhF4)
