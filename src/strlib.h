@@ -31,6 +31,7 @@ void drawStrWidthLim(const Font *font, int x, int y, const ushort *str, int widt
 int drawStrWordWrapped(int x0, int y0, int x1, int y1, const ushort *str,
 		const Font *fontReg, const Font *fontBold, const StrList *boldStrList, int forceDraw);
 int replaceLinks(ushort *str, int length);
+int replaceHtmlEntities(ushort *str, int length);
 
 
 #endif /* STRLIB_H */

@@ -937,48 +937,83 @@ LOCAL const ushort* ICACHE_FLASH_ATTR wstrnstr(const ushort *haystack, int hayst
 	return NULL;
 }
 
+LOCAL int ICACHE_FLASH_ATTR replaceStr(ushort *haystack, int haystackLen, const ushort *needle, int needleLen, const ushort *replace, int replaceLen, ushort separator)
+{
+	if (replaceLen > needleLen)
+	{
+		return 0;
+	}
+	const ushort *src = haystack;
+	ushort *dst = haystack;
+	int replaced = 0;
+	while (haystackLen > 0)
+	{
+		const ushort *pos = wstrnstr(src, haystackLen, needle, needleLen);
+		if (pos)	// needle found
+		{
+			// copy chars before the needle
+			int words = (pos-src);
+			os_memcpy(dst, src, words*2);
+			dst += words;
+			src += words;
+			haystackLen -= words;
+
+			// copy replacement
+			os_memcpy(dst, replace, replaceLen*2);
+			dst += replaceLen;
+
+			if (separator)
+			{
+				// skip until the separator
+				while (haystackLen > 0 && *src != separator)
+				{
+					src++;
+					haystackLen--;
+				}
+			}
+			else
+			{
+				// skip the needle chars
+				src += needleLen;
+				haystackLen -= needleLen;
+			}
+
+			replaced++;
+		}
+		else	// no more strings found, copy rest
+		{
+			os_memcpy(dst, src, haystackLen*2);
+			dst += haystackLen;
+			break;
+		}
+	}
+	*dst = '\0';
+	return replaced;
+}
+
 int ICACHE_FLASH_ATTR replaceLinks(ushort *str, int length)
 {
 	const ushort http[] = {'h','t','t','p'};
 	const ushort httpCap[] = {'H','T','T','P'};
-	const ushort *src = str;
-	ushort *dst = str;
-	while (length > 0)
-	{
-		// search for the string starting with 'http' or 'HTTP'
-		const ushort *link = wstrnstr(src, length, http, NELEMENTS(http));
-		if (!link)
-		{
-			link = wstrnstr(src, length, httpCap, NELEMENTS(httpCap));
-		}
-		
-		if (link)	// link found
-		{
-			// copy chars before the link
-			int words = (link-src);
-			os_memcpy(dst, src, words*2);
-			dst += words;
-			src += words;
-			length -= words;
-			
-			// skip link chars
-			while (length > 0 && *src != (ushort)' ')
-			{
-				src++;
-				length--;
-			}
-			*dst = LINK_PICTOGRAM_CODE;
-			dst++;
-		}
-		else	// no more links found, copy rest
-		{
-			int words = length;
-			os_memcpy(dst, src, words*2);
-			dst += words;
-			src += words;
-			length -= words;
-		}
-	}
-	*dst = '\0';
-	return (dst-str);
+	const ushort linkPic = LINK_PICTOGRAM_CODE;
+	int replaced = 0;
+	replaced += replaceStr(str, length, http, NELEMENTS(http), &linkPic, 1, ' ');
+	replaced += replaceStr(str, length, httpCap, NELEMENTS(httpCap), &linkPic, 1, ' ');
+	return replaced;
 }
+
+int replaceHtmlEntities(ushort *str, int length)
+{
+	const ushort amp[] = {'&','a','m','p',';'};
+	const ushort lt[] = {'&','l','t',';'};
+	const ushort gt[] = {'&','g','t',';'};
+	const ushort ampChar = '&';
+	const ushort ltChar = '<';
+	const ushort gtChar = '>';
+	int replaced = 0;
+	replaced += replaceStr(str, length, amp, NELEMENTS(amp), &ampChar, 1, 0);
+	replaced += replaceStr(str, length, lt, NELEMENTS(lt), &ltChar, 1, 0);
+	replaced += replaceStr(str, length, gt, NELEMENTS(gt), &gtChar, 1, 0);
+	return replaced;
+}
+

@@ -677,6 +677,7 @@ LOCAL int ICACHE_FLASH_ATTR parseTweet(TweetInfo *tweet, ushort **text)
 		return ERROR;
 	}
 	replaceLinks(*text, textLen);
+	replaceHtmlEntities(*text, textLen);
 
 	if (parseTweetUserInfo(json, jsonLen,
 			tweet->user.idStr, sizeof(tweet->user.idStr),
