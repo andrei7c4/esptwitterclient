@@ -22,17 +22,29 @@ int ICACHE_FLASH_ATTR base64encode(const char *src, int srcLen, char *dst, int d
 
 	// fake rom malloc init
 	mem_init(tempmem);
-	result = base64_encode(src, 20, &len);
+	result = base64_encode(src, srcLen, &len);
 	if (len > dstSize)
 	{
 		os_free(tempmem);
 		return 0;
 	}
-	len--;
-	os_memcpy(dst, result, len);
-	dst[len] = '\0';
+
+	// copy result, filter newlines
+	char *pDst = dst;
+	while (len > 0)
+	{
+		if (*result != '\n')
+		{
+			*pDst = *result;
+			pDst++;
+		}
+		result++;
+		len--;
+	}
+	*pDst = '\0';
+
 	os_free(tempmem);
-	return len;
+	return pDst-dst;
 }
 
 
