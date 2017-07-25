@@ -548,9 +548,9 @@ LOCAL void ICACHE_FLASH_ATTR reconnect(void)
 void ICACHE_FLASH_ATTR createTrackList(const char *trackStr)
 {
 	int trackLen = os_strlen(trackStr);
-	int trackConvSize = (trackLen+1)*sizeof(ushort);
+	int trackConvSize = trackLen+1;
 	os_free(trackWstr);
-	trackWstr = (ushort*)os_malloc(trackConvSize);
+	trackWstr = (ushort*)os_malloc(trackConvSize*sizeof(ushort));
 	if (trackWstr)
 	{
 		trackLen = u8_toucs(trackWstr, trackConvSize, trackStr, trackLen);
