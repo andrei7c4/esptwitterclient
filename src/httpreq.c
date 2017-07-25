@@ -143,7 +143,7 @@ LOCAL int appendParams(char *dst, int dstSize, const ParamList *paramList)
 }
 
 LOCAL int ICACHE_FLASH_ATTR formHttpRequest(char *dst, int dstSize,
-		const char *method, const char *host, const char *url,
+		HttpMethod httpMethod, const char *host, const char *url,
 		ParamList *paramList)
 {
 	int requestLen = 0;
@@ -156,6 +156,21 @@ LOCAL int ICACHE_FLASH_ATTR formHttpRequest(char *dst, int dstSize,
 	if (paramListEncodeValues(paramList) != OK)
 	{
 		goto out;
+	}
+
+	const char *method;
+	switch (httpMethod)
+	{
+	case httpGET:
+		method = "GET";
+		break;
+	case httpPOST:
+		method = "POST";
+		break;
+	case httpPUT:
+		method = "PUT";
+		break;
+	default: goto out;
 	}
 
 	char nonce[43];
@@ -171,7 +186,7 @@ LOCAL int ICACHE_FLASH_ATTR formHttpRequest(char *dst, int dstSize,
 	pDst += len;
 	dstSize -= len;
 
-	if (!os_strcmp(method, "GET") && paramList->count > 0)
+	if (httpMethod == httpGET && paramList->count > 0)
 	{
 		*pDst = '?';
 		pDst++;
@@ -185,7 +200,8 @@ LOCAL int ICACHE_FLASH_ATTR formHttpRequest(char *dst, int dstSize,
 	len = ets_snprintf(pDst, dstSize,
 			" HTTP/1.1\r\n"
 			"Accept: */*\r\n"
-			"Connection: close\r\n"
+			//"Connection: close\r\n"
+			"Connection: keep-alive\r\n"
 			"User-Agent: ESP8266\r\n"
 			"Content-Type: application/x-www-form-urlencoded\r\n"
 			"Authorization: OAuth "
@@ -203,7 +219,7 @@ LOCAL int ICACHE_FLASH_ATTR formHttpRequest(char *dst, int dstSize,
 	dstSize -= len;
 
 	int contentLen = 0;
-	if (!os_strcmp(method, "POST"))
+	if (httpMethod == httpPOST || httpMethod == httpPUT)
 	{
 		contentLen = paramListStrLen(paramList);
 	}
@@ -252,7 +268,7 @@ int ICACHE_FLASH_ATTR twitterGetUserInfo(const char *host)
 	ParamList params;
 	os_memset(&params, 0, sizeof(ParamList));
 	int requestLen = formHttpRequest(httpRequest, HTTP_REQ_MAX_LEN,
-			"GET", host, twitterVerifyUrl, &params);
+			httpGET, host, twitterVerifyUrl, &params);
 	if (requestLen > 0)
 	{
 		if (espconn_secure_send(&espConn, (uint8*)httpRequest, requestLen) == OK)
@@ -287,7 +303,7 @@ int ICACHE_FLASH_ATTR twitterRequestStream(const char *host, const char *track, 
 		paramListAppend(&params, "track", track);
 	}
 	int requestLen = formHttpRequest(httpRequest, HTTP_REQ_MAX_LEN,
-			"GET", host, twitterStreamUrl, &params);
+			httpGET, host, twitterStreamUrl, &params);
 	if (requestLen > 0)
 	{
 		if (espconn_secure_send(&espConn, (uint8*)httpRequest, requestLen) == OK)
@@ -311,7 +327,7 @@ int ICACHE_FLASH_ATTR twitterSendDirectMsg(const char *host, const char *text, c
 	paramListAppend(&params, "text", text);
 	paramListAppend(&params, "user_id", userId);
 	int requestLen = formHttpRequest(httpRequest, HTTP_REQ_MAX_LEN,
-			"POST", host, twitterNewDMUrl, &params);
+			httpPOST, host, twitterNewDMUrl, &params);
 	if (requestLen > 0)
 	{
 		if (espconn_secure_send(&espConn, (uint8*)httpRequest, requestLen) == OK)
@@ -337,7 +353,7 @@ int ICACHE_FLASH_ATTR twitterRetweetTweet(const char *host, const char *tweetId)
 	ParamList params;
 	os_memset(&params, 0, sizeof(ParamList));
 	int requestLen = formHttpRequest(httpRequest, HTTP_REQ_MAX_LEN,
-			"POST", host, url, &params);
+			httpPOST, host, url, &params);
 	if (requestLen > 0)
 	{
 		if (espconn_secure_send(&espConn, (uint8*)httpRequest, requestLen) == OK)
@@ -360,7 +376,7 @@ int ICACHE_FLASH_ATTR twitterLikeTweet(const char *host, const char *tweetId)
 	os_memset(&params, 0, sizeof(ParamList));
 	paramListAppend(&params, "id", tweetId);
 	int requestLen = formHttpRequest(httpRequest, HTTP_REQ_MAX_LEN,
-			"POST", host, twitterFavoritesUrl, &params);
+			httpPOST, host, twitterFavoritesUrl, &params);
 	if (requestLen > 0)
 	{
 		if (espconn_secure_send(&espConn, (uint8*)httpRequest, requestLen) == OK)
@@ -383,7 +399,7 @@ int ICACHE_FLASH_ATTR twitterPostTweet(const char *host, const char *text)
 	os_memset(&params, 0, sizeof(ParamList));
 	paramListAppend(&params, "status", text);
 	int requestLen = formHttpRequest(httpRequest, HTTP_REQ_MAX_LEN,
-			"POST", host, twitterStatusUrl, &params);
+			httpPOST, host, twitterStatusUrl, &params);
 	if (requestLen > 0)
 	{
 		if (espconn_secure_send(&espConn, (uint8*)httpRequest, requestLen) == OK)

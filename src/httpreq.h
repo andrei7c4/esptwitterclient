@@ -21,6 +21,13 @@ struct ParamList
 	int count;
 };
 
+typedef enum{
+	httpGET,
+	httpPOST,
+	httpPUT
+}HttpMethod;
+
+
 int twitterGetUserInfo(const char *host);
 int twitterRequestStream(const char *host, const char *track, const char *language, const char *filter);
 int twitterSendDirectMsg(const char *host, const char *text, const char *userId);
