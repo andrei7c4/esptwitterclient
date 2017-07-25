@@ -1,13 +1,13 @@
 # ESP8266 Twitter Client
 This is an ESP8266 based Twitter client built with 256x64 OLED (SSD1322 based) display. ESP8266 connects directly to Twitter, so no third-party proxy services are used.
 
-Application connects to [user stream](https://dev.twitter.com/streaming/userstreams) and displays all the incoming tweets for that user. This basically means the same tweets the user would see on her Twitter main page. Additionally, a [track](https://dev.twitter.com/streaming/overview/request-parameters#track) paramter can be set to include tweets containing specified keywords.
+Application connects to [user stream](https://dev.twitter.com/streaming/userstreams) and displays all the incoming tweets for that user. This basically means the same tweets the user would see on her Twitter main page. Additionally, a [track](https://dev.twitter.com/streaming/overview/request-parameters#track) parameter can be set to include tweets containing specified keywords.
 
 The tweet currently shown on the display can be [retweeted](https://dev.twitter.com/rest/reference/post/statuses/retweet/id), [liked](https://dev.twitter.com/rest/reference/post/favorites/create) and shared by sending link to it in [direct message](https://dev.twitter.com/rest/reference/post/direct_messages/new). This way user can easily access shared tweet on some other device.
 
 Application uses Twitter [REST](https://dev.twitter.com/rest/public) and [Streaming](https://dev.twitter.com/streaming/overview) APIs and implements OAuth 1.0a authorization as described [here](https://dev.twitter.com/oauth/overview/authorizing-requests).
 
-Unicode is supported. Glyphs for all characters found in Arial Unicode MS font are embeddded in the binary. The glyphs are regular and bold variants with the sizes of 10 and 13. The font size is automatically selected based on the length of the tweet. Additionally, word wrapping and keyword (hashtag) highlighting are performed for tweet text.
+Unicode is supported. Glyphs for all characters found in Arial Unicode MS font are embedded in the binary. The glyphs are regular and bold variants with the sizes of 10 and 13. The font size is automatically selected based on the length of the tweet. Additionally, word wrapping and keyword (hashtag) highlighting are performed for tweet text.
 
 ## Building the hardware
 Any ESP8266 based module with at least 4 MB flash and SPI pins, such as ESP-12E, can be used. [NodeMCU-DEVKIT](https://github.com/nodemcu/nodemcu-devkit-v1.0) is a good choice since it already contains 3.3 V regulator suitable for powering OLED display.
@@ -38,19 +38,19 @@ Due to the limitation of ESP8266 being able to directly access only addresses < 
 When flashing for the first time, the font data needs to be flashed. Run `make flashall`. This will flash the application segments and the font segment. The operation takes a few minutes even at the high baud rate, but it only needs to be done once if the font is not changed. From now on, `make flash` can be used. It only flashes the application segments, which is much faster.
 
 ## Usage
-Device settings can be changed through the serial interface (115200/8-N-1). The following syntax should be used:
+Device settings can be changed through the serial interface (921600/8-N-1). The following syntax should be used:
 ```
 parameter:value<CR>
 ```
 At least the following parameters must be set by the user:
  - ssid - WiFi SSID
  - pass - WiFi password
- - consumer_key - Twitter Consumer Key (API Key)
- - consumer_secret - Twitter Consumer Secret (API Secret)
- - access_token - Twitter Access Token
- - token_secret - Twitter Access Token Secret
+ - consumer_key - Twitter app Consumer Key (API Key)
+ - consumer_secret - Twitter app Consumer Secret (API Secret)
+ - access_token - Twitter app Access Token
+ - token_secret - Twitter app Access Token Secret
 
-In order to obtain Twitter keys, user must create a new Twitter app with her own account:
+In order to obtain Twitter app keys, user must create a new Twitter app with her own account:
  1. Go to https://apps.twitter.com/app/new
  2. Fill the form (content doesn't matter).
  3. When the app is created, go to *Permissions* tab and check that the app has at least *Read and Write* permissions.
