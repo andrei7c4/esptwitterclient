@@ -152,7 +152,7 @@ LOCAL void ICACHE_FLASH_ATTR menuHide(void)
 LOCAL void ICACHE_FLASH_ATTR menuDelayedHide(int delay)
 {
 	os_timer_disarm(&menuTmr);
-	os_timer_setfn(&menuTmr, menuHide, NULL);
+	os_timer_setfn(&menuTmr, (os_timer_func_t*)menuHide, NULL);
 	os_timer_arm(&menuTmr, delay, 0);
 }
 
