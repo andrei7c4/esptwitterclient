@@ -9,11 +9,9 @@
 #include "graphics.h"
 
 
-void (*drawPixel)(int x, int y, char color) = drawPixelNormal;
-void inverseColor(int inverse)
-{
-	drawPixel = inverse ? drawPixelInverse : drawPixelNormal;
-}
+LOCAL const uchar maskLut[8] = {0x80, 0x40, 0x20, 0x10, 0x08, 0x04, 0x02, 0x01};
+LOCAL const uchar maskLutInv[8] = {0x7F, 0xBF, 0xDF, 0xEF, 0xF7, 0xFB, 0xFD, 0xFE};
+int inverseColor = FALSE;
 
 
 uchar mem[DISP_HEIGHT][DISP_MEMWIDTH];
@@ -152,12 +150,21 @@ LOCAL int ICACHE_FLASH_ATTR roundUp(int numToRound, int multiple)
     return numToRound + multiple - remainder;
 }
 
-LOCAL char ICACHE_FLASH_ATTR getPixel(int x, int y, int byteWidth, uchar *bitmap)
+LOCAL int ICACHE_FLASH_ATTR getPixel(int x, int y, int byteWidth, uchar *bitmap)
 {
-    int xByte = x/8;
-    int bitMask = 1<<(7-(x%8));
-    int idx = y*byteWidth+xByte;
-    return (bitmap[idx] & bitMask) != 0;
+	uchar *pBuf = bitmap + y*byteWidth + x/8;
+    return (*pBuf & maskLut[x&7]) != 0;
+}
+
+void ICACHE_FLASH_ATTR drawPixel(int x, int y, int color)
+{
+    if (x >= DISP_WIDTH || y >= memHeight)
+    {
+        return;
+    }
+    uchar *pBuf = &pMem[y][x/8];
+    x = x & 7;
+    *pBuf = (*pBuf & maskLutInv[x]) | (-(color^inverseColor) & maskLut[x]);
 }
 
 void ICACHE_FLASH_ATTR drawBitmapPixelByPixel(int x, int y, int bmWidth, int bmHeight, const uint *bitmap, int bitmapSize)
@@ -198,46 +205,6 @@ void ICACHE_FLASH_ATTR drawBitmapPixelByPixel(int x, int y, int bmWidth, int bmH
     }
 	
 	os_free(pBitmap);
-}
-
-
-
-void ICACHE_FLASH_ATTR drawPixelNormal(int x, int y, char color)
-{
-    if (x >= DISP_WIDTH || y >= memHeight)
-    {
-        return;
-    }
-
-    int xByte = x/8;
-    int bitMask = 1<<(7-(x%8));
-    if (color)
-    {
-        pMem[y][xByte] |= bitMask;
-    }
-    else
-    {
-        pMem[y][xByte] &= ~bitMask;
-    }
-}
-
-void ICACHE_FLASH_ATTR drawPixelInverse(int x, int y, char color)
-{
-    if (x >= DISP_WIDTH || y >= memHeight)
-    {
-        return;
-    }
-
-    int xByte = x/8;
-    int bitMask = 1<<(7-(x%8));
-    if (color)
-    {
-        pMem[y][xByte] &= ~bitMask;
-    }
-    else
-    {
-        pMem[y][xByte] |= bitMask;
-    }
 }
 
 void ICACHE_FLASH_ATTR drawLine(int x0, int y0, int x1, int y1, char color)

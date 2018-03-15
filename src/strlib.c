@@ -573,9 +573,9 @@ int ICACHE_FLASH_ATTR drawStrHighlight_Latin(const Font *font, int x, int y, con
 		drawPixel(x, y1, 0);
 		drawPixel(x1, y1, 0);
 
-		inverseColor(TRUE);
+		inverseColor = TRUE;
 		drawStr(font, x+1, y+1, strbuf, strLen);
-		inverseColor(FALSE);
+		inverseColor = FALSE;
 	}
 	os_free(strbuf);
 	return width+2;

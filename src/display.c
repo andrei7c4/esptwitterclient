@@ -37,8 +37,8 @@ LOCAL void ICACHE_FLASH_ATTR horizontalSqueezeTmrCb(void)
 {
 	if (squeezeColumn <= 127)
 	{
-		drawPixelNormal(squeezeColumn, 0, 0);
-		drawPixelNormal(255-squeezeColumn, 0, 0);
+		drawPixel(squeezeColumn, 0, 0);
+		drawPixel(255-squeezeColumn, 0, 0);
 		SSD1322_cpyMemBuf(mem2, 0, dispScrollCurLine+squeezeRow, 1);
 		squeezeColumn++;
 	}
@@ -67,7 +67,7 @@ LOCAL void ICACHE_FLASH_ATTR horizontalSqueezeStart(void)
 	int x;
 	for (x = squeezeColumn; x < DISP_WIDTH-squeezeColumn; x++)
 	{
-		drawPixelNormal(x, 0, 1);
+		drawPixel(x, 0, 1);
 	}
 	SSD1322_cpyMemBuf(mem2, 0, dispScrollCurLine+squeezeRow, 1);
 
